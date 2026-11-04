@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from models import User, db, Base
 from sqlalchemy.orm import sessionmaker
 from dependencies import get_sessao
 from main import bcrypt_context
+from schemas import UsuarioSchema
+from sqlalchemy.orm import Session
 
 
 Base.metadata.create_all(bind=db)
@@ -16,14 +18,14 @@ async def home():
 
 
 @auth_router.post("/register", summary="Cadastro de usuário", description="Realiza o cadastro de um novo usuário no sistema")
-async def register(email: str, password: str, nome: str, session = Depends(get_sessao)):
-    usuario = session.query(User).filter(User.email==email).first()
+async def register(usuario_schema: UsuarioSchema, session: Session = Depends(get_sessao)):
+    usuario = session.query(User).filter(User.email==usuario_schema.email).first()
     if usuario:
-        return {"message": "Usuário já cadastrado"}
+        raise HTTPException(status_code=400, detail="Usuário já cadastrado")
     else:
-        senha_secreta = bcrypt_context.hash(password)
-        novo_usuario = User(nome, email, senha_secreta)
+        senha_secreta = bcrypt_context.hash(usuario_schema.senha)
+        novo_usuario = User(usuario_schema.nome, usuario_schema.email, senha_secreta, usuario_schema.ativo, usuario_schema.admin)
         session.add(novo_usuario)
         session.commit()
-        return {"message": "Usuário cadastrado com sucesso"}
+        return {"message": f"Usuário cadastrado com sucesso {usuario_schema.email}"}
     
