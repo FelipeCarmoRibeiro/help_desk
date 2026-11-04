@@ -1,9 +1,19 @@
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy_utils.types import ChoiceType
+import os
 # Configuração do banco de dados
 
-db = create_engine("sqlite:///banco.db")
+
+
+
+from sqlalchemy import create_engine
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+DATABASE_URL = "sqlite:///" + os.path.join(BASE_DIR, "banco.db")
+
+db = create_engine(DATABASE_URL)
 
 Base = declarative_base()
 
@@ -42,7 +52,7 @@ class Chamado(Base):
     titulo = Column("title",String)
     descricao = Column("description",String)
     status = Column("status",String, default="Aberto")
-    usuario = Column("user_chamado",String, ForeignKey("users.id"))
+    usuario = Column("user_chamado",Integer, ForeignKey("users.id"))
 
 
     def __init__(self, titulo, descricao, status="Aberto", usuario=None):
@@ -50,3 +60,8 @@ class Chamado(Base):
         self.descricao = descricao
         self.status = status
         self.usuario = usuario
+
+
+print("Caminho do banco:", DATABASE_URL)
+print("Pasta existe:", os.path.exists(BASE_DIR))
+print("Banco existe:", os.path.exists(os.path.join(BASE_DIR, "banco.db")))
