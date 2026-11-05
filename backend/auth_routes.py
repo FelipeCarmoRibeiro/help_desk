@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
 from models import User, db, Base
-from sqlalchemy.orm import sessionmaker
 from dependencies import get_sessao
 from main import bcrypt_context
 from schemas import UsuarioSchema
@@ -11,12 +10,12 @@ Base.metadata.create_all(bind=db)
 auth_router = APIRouter(
     prefix="/auth", tags=["auth"]
 )
-
+#dominio.com/auth
 @auth_router.get("/", summary="Página inicial", description="Retorna uma mensagem de boas-vindas")
 async def home():
     return {"message": "Bem-vindo à página inicial"}
 
-
+#dominio.com/auth/register
 @auth_router.post("/register", summary="Cadastro de usuário", description="Realiza o cadastro de um novo usuário no sistema")
 async def register(usuario_schema: UsuarioSchema, session: Session = Depends(get_sessao)):
     usuario = session.query(User).filter(User.email==usuario_schema.email).first()

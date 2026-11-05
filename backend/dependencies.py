@@ -1,5 +1,5 @@
 from models import db
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 
 def get_sessao():
     try:
