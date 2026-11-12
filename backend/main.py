@@ -1,3 +1,6 @@
+
+#cd backend
+#venv\Scripts\Activate.ps1
 #para rodar o servidor, use o comando: uvicorn main:app --reload
 
 from passlib.context import CryptContext

@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey
-from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy_utils.types import ChoiceType
+from sqlalchemy.orm import declarative_base
 import os
 # Configuração do banco de dados
 
@@ -54,14 +53,14 @@ class Chamado(Base):
     status = Column("status",String, default="Aberto")
     usuario = Column("user_chamado",Integer, ForeignKey("users.id"))
 
-
+#Inicializador da classe Chamado
     def __init__(self, titulo, descricao, status="Aberto", usuario=None):
         self.titulo = titulo
         self.descricao = descricao
         self.status = status
         self.usuario = usuario
 
-
+#Teste de conexão com o banco de dados
 print("Caminho do banco:", DATABASE_URL)
 print("Pasta existe:", os.path.exists(BASE_DIR))
 print("Banco existe:", os.path.exists(os.path.join(BASE_DIR, "banco.db")))
